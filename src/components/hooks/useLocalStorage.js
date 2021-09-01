@@ -1,33 +1,36 @@
-import { useState } from 'react';
-/**
- * @typedef {object} LoadingStateHook
- * @property {boolean} loadingState - current loading state
- * @property {function} startLoading - function to change loading state to true
- * @property {function} stopLoading - function to change loading state to false
- */
+import * as React from 'react'
 
+function useLocalStorageState(
+  key,
+  defaultValue = '',
+  { serialize = JSON.stringify, deserialize = JSON.parse } = {},
+) {
+  const [state, setState] = React.useState(() => {
+    const valueInLocalStorage = window.localStorage.getItem(key)
+    if (valueInLocalStorage) {
+      // the try/catch is here in case the localStorage value was set before
+      // we had the serialization in place
+      try {
+        return deserialize(valueInLocalStorage)
+      } catch (error) {
+        window.localStorage.removeItem(key)
+      }
+    }
+    return typeof defaultValue === 'function' ? defaultValue() : defaultValue
+  })
 
-/**
- * 
- * @param {boolean} initialLoadingState - initial loadingstate
- * @return {LoadingStateHook}
- */
-const useLoading = (initialLoadingState = true) => {
-  const [loadingState, setLoadingState] = useState(initialLoadingState);
+  const prevKeyRef = React.useRef(key)
 
-  const startLoading = () => {
-    setLoadingState(true);
-  };
+  React.useEffect(() => {
+    const prevKey = prevKeyRef.current
+    if (prevKey !== key) {
+      window.localStorage.removeItem(prevKey)
+    }
+    prevKeyRef.current = key
+    window.localStorage.setItem(key, serialize(state))
+  }, [key, state, serialize])
 
-  const stopLoading = () => {
-    setLoadingState(false);
-  };
-
-  return {
-    loadingState,
-    startLoading,
-    stopLoading
-  };
+  return [state, setState]
 }
 
-export default useLoading;
+export default useLocalStorageState;

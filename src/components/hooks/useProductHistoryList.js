@@ -11,16 +11,17 @@ import { useState, useEffect } from 'react';
  * @param {boolean} initialLoadingState - initial loadingstate
  * @return {LoadingStateHook}
  */
-function useProductHistoryList(initialLoadingState = true) {
-  const [productList, setProductList] = useState(initialLoadingState);
-  const [error, setError] = useState(initialLoadingState);
+function useProductHistoryList() {
+  const [productList, setProductList] = useState([]);
+  const [error, setError] = useState(false);
 
 
   useEffect(() => {
-    fetch(process.env.PRODUCT_LIST_ENDPOINT)
+    console.log(process.env.REACT_APP_PRODUCT_LIST_ENDPOINT)
+    fetch(process.env.REACT_APP_PRODUCT_LIST_ENDPOINT)
       .then(response => response.json())
-      .then((data) => setProductList(data))
-      .catch(error => setError(error));
+      .then((data) => setProductList(data.products))
+      .catch(error => setError(true));
   }, []);
 
 
