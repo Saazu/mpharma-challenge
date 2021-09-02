@@ -25,16 +25,19 @@ function useProductHistoryList() {
   }, []);
 
 
-  function addNewProduct() {
-
+  function addNewProduct(product) {
+    const newList = [...productList];
+    newList.push(product);
+    setProductList(newList);
   }
 
   function editProduct() {
 
   }
 
-  function deleteProduct() {
-
+  function deleteProduct(id) {
+    const newList = productList.filter((product) => product.id !== id);
+    setProductList(newList);
   }
 
   return {
