@@ -1,5 +1,5 @@
 import './App.css';
-import ProductPricePage from './components/pages/ProductPriceHistory';
+import ProductPricePage from './pages/ProductPriceHistory';
 import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {

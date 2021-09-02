@@ -1,7 +1,7 @@
 import { useState } from 'react';
 /**
  * @typedef {object} LoadingStateHook
- * @property {boolean} loadingState - current loading state
+ * @property {boolean} isLoading - current loading state
  * @property {function} startLoading - function to change loading state to true
  * @property {function} stopLoading - function to change loading state to false
  */
@@ -13,7 +13,7 @@ import { useState } from 'react';
  * @return {LoadingStateHook}
  */
 const useLoading = (initialLoadingState = true) => {
-  const [loadingState, setLoadingState] = useState(initialLoadingState);
+  const [isLoading, setLoadingState] = useState(initialLoadingState);
 
   const startLoading = () => {
     setLoadingState(true);
@@ -24,7 +24,7 @@ const useLoading = (initialLoadingState = true) => {
   };
 
   return {
-    loadingState,
+    isLoading,
     startLoading,
     stopLoading
   };
