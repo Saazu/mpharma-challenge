@@ -20,7 +20,6 @@ function useProductHistoryList() {
 
   const { isLoading, stopLoading } = useLoadingState();
   const [cachedData, setCachedData] = useLocalStorageState("mp-priceHx");
-  const lastPriceId = productList.length;
 
   function saveData(productList) {
     setProductList(productList);
@@ -80,6 +79,7 @@ function useProductHistoryList() {
       ...productData,
       date: (new Date()).toDateString(),
       id: productList.length + 1,
+      deleted: false,
     };
     const newProductList = [...productList];
     newProductList.push(p);
@@ -109,7 +109,6 @@ function useProductHistoryList() {
     productList,
     error,
     isLoading,
-    lastPriceId,
     addNewProduct,
     editProduct,
     deleteProduct,

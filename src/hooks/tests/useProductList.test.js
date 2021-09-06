@@ -1,10 +1,10 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import useProductHistoryList from "../useProductHistoryList";
 
-describe("allows user to play a quiz", () => {
+describe("handle the logic for getting product list data", () => {
   const { result, waitForNextUpdate } = renderHook(() => useProductHistoryList());
 
-  test("play quiz", async () => {
+  test("get data", async () => {
     //assert initial state
     expect(result.current.productList).toBeInstanceOf(Array);
     expect(result.current.isLoading).toBe(true);
@@ -16,68 +16,36 @@ describe("allows user to play a quiz", () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toEqual(false);
 
-    // //start quiz
-    // act(() => {
-    //   result.current.startQuiz();
-    // });
+    //start quiz
+    const numProducts = result.current.productList.length;
+    act(() => {
+      const newProduct = {
+        name: "Wormplex 400",
+        price: 11.3,
+      }
+      result.current.addNewProduct(newProduct);
+    });
 
-    //assert quiz started state
-    // expect(result.current.quizStage).toBe("quiz-started");
-    // expect(result.current.questionsLoading).toBe(false);
-    // expect(result.current.currentQuestionIndex).toBe(0);
-    // expect(result.current.questions.length).toBe(10);
-    // expect(result.current.userAnswers).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    //add product price
+    expect(result.current.productList.length).toBe((numProducts + 1));
+    expect(result.current.productList[numProducts].name).toBe("Wormplex 400");
+    expect(result.current.productList[numProducts].price).toBe(11.3);
+    expect(result.current.productList[numProducts].deleted).toBe(false);
 
-    // //select false as answer to first question
-    // act(() => {
-    //   result.current.handleAnswerSelection(false);
-    // });
+    // delete product price
+    const lastProductId = result.current.productList.length;
+    act(() => {
+      result.current.deleteProduct(lastProductId);
+    });
+    expect(result.current.productList[lastProductId - 1].deleted).toBe(true);
 
-    // expect(result.current.quizStage).toBe("quiz-started");
-    // expect(result.current.questionsLoading).toBe(false);
-    // expect(result.current.currentQuestionIndex).toBe(1);
-    // expect(result.current.questions.length).toBe(10);
-    // expect(result.current.userAnswers).toEqual([false, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-
-    // //select true as answer to second question
-    // act(() => {
-    //   result.current.handleAnswerSelection(true);
-    // })
-
-    // expect(result.current.quizStage).toBe("quiz-started");
-    // expect(result.current.questionsLoading).toBe(false);
-    // expect(result.current.currentQuestionIndex).toBe(2);
-    // expect(result.current.questions.length).toBe(10);
-    // expect(result.current.userAnswers).toEqual([false, true, 0, 0, 0, 0, 0, 0, 0, 0]);
-
-    // //select true for the rest of the questions
-    // const numQuestionsLeft = result.current.numQuestions - result.current.currentQuestionIndex;
-    // for (let i = 0; i < numQuestionsLeft; i++) {
-    //   act(() => {
-    //     result.current.handleAnswerSelection(true);
-    //   })
-    // }
-
-    //   expect(result.current.quizStage).toBe("quiz-completed");
-    //   expect(result.current.questionsLoading).toBe(false);
-    //   expect(result.current.currentQuestionIndex).toBe(10);
-    //   expect(result.current.userAnswers).toEqual([false, true, true, true, true, true, true, true, true, true]);
-
-    //   //check correct answers
-    //   const { results, numCorrectAnswers } = result.current.getQuizResult(result.current.userAnswers);
-    //   expect(results.length).toBe(result.current.numQuestions);
-    //   expect(numCorrectAnswers).toBeGreaterThanOrEqual(0);
-    //   expect(numCorrectAnswers).toBeLessThanOrEqual(10);
-
-    //   //start new quiz
-    //   act(() => {
-    //     result.current.playNewGame();
-    //   })
-
-    //   //assert new game state
-    //   expect(result.current.questionsLoading).toBe(false);
-    //   expect(result.current.quizStage).toBe("welcome-stage");
-    //   expect(result.current.questions).toEqual([]);
-    //   expect(result.current.userAnswers).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    // Edit a product details
+    act(() => {
+      const newDetails = {
+        name: "Wormplex 500"
+      };
+      result.current.editProduct(lastProductId, newDetails);
+    });
+    expect(result.current.productList[lastProductId - 1].name).toBe("Wormplex 500");
   });
 });
