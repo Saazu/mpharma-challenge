@@ -13,9 +13,6 @@ import DeleteProductModal from './DeleteProductModal';
 import EditProductModal from './EditProductModal';
 
 const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
   card: {
     margin: "8px"
   },
@@ -32,7 +29,7 @@ const useStyles = makeStyles({
   }
 });
 
-function ProductCard({ productId, name, price, date, deleteProduct, editProduct, id }) {
+function ProductCard({ name, price, date, deleteProduct, editProduct, id }) {
   const classes = useStyles();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -50,6 +47,11 @@ function ProductCard({ productId, name, price, date, deleteProduct, editProduct,
     setOpenDeleteModal(false);
   }
 
+  function formatDate(date) {
+    const newDate = new Date(date);
+    return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()} ${newDate.getHours()}:${newDate.getMinutes()}`
+  }
+
   return (
     <Card className={classes.root}>
       <CardContent className={classes.card}>
@@ -64,7 +66,7 @@ function ProductCard({ productId, name, price, date, deleteProduct, editProduct,
         >
           <DateRange className={classes.elementPadding} />
           <Typography className={classes.elementPadding} variant="body2" color="textSecondary" component="p">
-            {date}
+            {formatDate(date)}
           </Typography>
         </Grid>
 

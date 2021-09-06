@@ -1,4 +1,3 @@
-import './App.css';
 import ProductPricePage from './pages/ProductPriceHistory';
 import ErrorBoundary from './components/ErrorBoundary';
 

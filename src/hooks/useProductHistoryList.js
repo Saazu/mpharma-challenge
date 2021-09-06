@@ -20,20 +20,30 @@ function useProductHistoryList() {
 
   const { isLoading, stopLoading } = useLoadingState();
   const [cachedData, setCachedData] = useLocalStorageState("mp-priceHx");
+  const lastPriceId = productList.length;
 
   function saveData(productList) {
     setProductList(productList);
     setCachedData(productList);
   }
 
+  /**
+   * @param {Bbject} product 
+   * @return {Array} - normalised array
+   */
   function normalisePrice(product) {
-    const { id, name } = product
+    const { name } = product
     return product.prices.map(price => ({
       ...price,
       name,
       deleted: false,
     }));
   }
+  /**
+   * 
+   * @param {Array} productList 
+   * @return {Array}
+   */
   function normaliseProductHistoryList(productList) {
     const newList = productList.map(product => normalisePrice(product));
     return newList.flat(1);
@@ -45,8 +55,8 @@ function useProductHistoryList() {
       .then((data) => {
         const normalisedList = normaliseProductHistoryList(data.products);
         saveData(normalisedList);
+        stopLoading()
       })
-      .then(() => stopLoading())
       .catch(error => {
         setError(true);
         console.log(error);
@@ -56,11 +66,15 @@ function useProductHistoryList() {
   useEffect(() => {
     if (cachedData) {
       setProductList(cachedData);
+      stopLoading();
     } else {
       getData();
     }
   }, [cachedData]);
 
+  /**
+   * @param {Array} productData 
+   */
   function addNewProduct(productData) {
     const p = {
       ...productData,
@@ -80,6 +94,9 @@ function useProductHistoryList() {
     saveData(newProductList);
   }
 
+  /**
+   * @param {Number} id
+   */
   function deleteProduct(id) {
     const productToEdit = productList.find((product) => product.id === id);
     const newProductList = [...productList];
@@ -92,6 +109,7 @@ function useProductHistoryList() {
     productList,
     error,
     isLoading,
+    lastPriceId,
     addNewProduct,
     editProduct,
     deleteProduct,

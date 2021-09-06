@@ -16,11 +16,11 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     color: "white",
-    margin: "5 5 0 4"
+    margin: "5 5 0 4",
   },
   typography: {
     fontWeight: "bold"
-  }
+  },
 }));
 
 function NavBar({ addNewProduct }) {
@@ -57,7 +57,7 @@ function NavBar({ addNewProduct }) {
               className={styles.button}
               edge="end"
               color="default"
-              aria-label="add product"
+              aria-label="add price"
               onClick={showModal}
             >
               <AddRounded fontSize="medium" />
