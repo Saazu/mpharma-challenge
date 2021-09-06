@@ -1,7 +1,14 @@
-import React from "react";
-import { AppBar, IconButton, Toolbar, Grid, Typography } from '@material-ui/core';
+import React, { useState } from "react";
+import {
+  AppBar,
+  IconButton,
+  Toolbar,
+  Grid,
+  Typography,
+  makeStyles,
+} from '@material-ui/core';
 import { AddRounded } from '@material-ui/icons';
-import { makeStyles } from "@material-ui/core";
+import AddProductModal from "./AddNewProductModal";
 
 const useStyles = makeStyles((theme) => ({
   menu: {
@@ -16,9 +23,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function NavBar() {
+function NavBar({ addNewProduct }) {
   const styles = useStyles();
+  const [openAddProductMpdal, setOpenAddProductMpdal] = useState(false)
 
+  function closeModal() {
+    setOpenAddProductMpdal(false);
+  }
+
+  function showModal() {
+    setOpenAddProductMpdal(true);
+  }
   return (
     <AppBar
       className={styles.menu}
@@ -32,11 +47,18 @@ function NavBar() {
           alignItems="center"
         >
           <Grid item>
+            <AddProductModal
+              openAddProductMpdal={openAddProductMpdal}
+              closeModal={closeModal}
+              addNewProduct={addNewProduct}
+
+            />
             <IconButton
               className={styles.button}
               edge="end"
               color="default"
               aria-label="add product"
+              onClick={showModal}
             >
               <AddRounded fontSize="medium" />
             </IconButton>
